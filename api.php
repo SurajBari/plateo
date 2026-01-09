@@ -3,28 +3,59 @@ session_start();
 header('Content-Type: application/json');
 
 $products = [
-    'bt-01' => ['name' => 'Kumartuli Heritage Thala', 'type' => 'Traditional Clay Plate', 'price' => 599, 'img' => 'https://m.media-amazon.com/images/I/51ZFsr-JbyL._SX679_.jpg', 'desc' => 'Eco-friendly hand-pressed clay plate.'],
-    'kg-02' => ['name' => 'Classic Matir Glass', 'type' => 'Earthen Tumbler (Set of 2)', 'price' => 249, 'img' => 'https://5.imimg.com/data5/SELLER/Default/2021/6/MQ/NP/YI/131065961/traditional-clay-glass-500x500.jpg', 'desc' => 'Tapered earthen glass that keeps water cool.'],
-    'as-03' => ['name' => 'Alpana Engraved Bowl', 'type' => 'Hand-Painted Stoneware', 'price' => 399, 'img' => 'https://m.media-amazon.com/images/I/61MvS1PAn6L._SL1000_.jpg', 'desc' => 'Deep bowl featuring hand-carved folk motifs.'],
-    'bs-04' => ['name' => 'Royal Baishakhi Set', 'type' => 'Full Dining Set (6pc)', 'price' => 1899, 'img' => 'https://m.media-amazon.com/images/I/71N8Y1p98LL._SL1500_.jpg', 'desc' => 'A grand set for festivals including 4 bowls.']
+    'bt-01' => [
+        'name' => 'Kumartuli Heritage Thala',
+        'type' => 'Traditional Clay Plate',
+        'price' => 599,
+        'img' => 'https://m.media-amazon.com/images/I/51ZFsr-JbyL._SX679_.jpg',
+        'desc' => 'Eco-friendly hand-pressed clay plate. Naturally seasoned for an authentic Bengali dining experience.'
+    ],
+    'kg-02' => [
+        'name' => 'Classic Matir Glass',
+        'type' => 'Earthen Tumbler (Set of 2)',
+        'price' => 249,
+        'img' => 'https://5.imimg.com/data5/SELLER/Default/2021/6/MQ/NP/YI/131065961/traditional-clay-glass-500x500.jpg',
+        'desc' => 'Tapered earthen glass that keeps water naturally cool with a rustic terracotta aroma.'
+    ],
+    'as-03' => [
+        'name' => 'Alpana Engraved Bowl',
+        'type' => 'Hand-Painted Stoneware',
+        'price' => 399,
+        'img' => 'https://m.media-amazon.com/images/I/61MvS1PAn6L._SL1000_.jpg',
+        'desc' => 'Deep bowl featuring hand-carved traditional folk motifs on a dark burnt clay base.'
+    ],
+    'bs-04' => [
+        'name' => 'Royal Baishakhi Set',
+        'type' => 'Full Dining Set (6pc)',
+        'price' => 1899,
+        'img' => 'https://m.media-amazon.com/images/I/71N8Y1p98LL._SL1500_.jpg',
+        'desc' => 'A grand set for festivals: includes Thala, Glass, and 4 Bowls crafted by master artisans.'
+    ]
 ];
 
 if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
 
-$action = $_GET['action'] ?? '';
+// Handle Actions
+$method = $_SERVER['REQUEST_METHOD'];
+$action = $_GET['action'] ?? 'get_data';
 
-if ($action === 'get_data') {
-    echo json_encode(['products' => $products, 'cart' => $_SESSION['cart']]);
-} 
-
-elseif ($action === 'add' && isset($_POST['id'])) {
-    $id = $_POST['id'];
+if ($action === 'add' && isset($_POST['product_id'])) {
+    $id = $_POST['product_id'];
     $_SESSION['cart'][$id] = ($_SESSION['cart'][$id] ?? 0) + 1;
-    echo json_encode(['success' => true, 'added' => $products[$id]['name']]);
-} 
-
-elseif ($action === 'remove' && isset($_POST['id'])) {
-    unset($_SESSION['cart'][$_POST['id']]);
-    echo json_encode(['success' => true]);
+    echo json_encode(['success' => true, 'name' => $products[$id]['name']]);
+    exit;
 }
-?>
+
+if ($action === 'remove' && isset($_POST['product_id'])) {
+    $id = $_POST['product_id'];
+    unset($_SESSION['cart'][$id]);
+    echo json_encode(['success' => true]);
+    exit;
+}
+
+// Default: Return data
+echo json_encode([
+    'products' => $products,
+    'cart' => $_SESSION['cart'],
+    'cart_count' => array_sum($_SESSION['cart'])
+]);
