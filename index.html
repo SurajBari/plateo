@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PlateO | Clay Heritage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlateO | Artisan Bengali Earthenware</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Plus+Jakarta+Sans:wght@300;400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
-<body class="overflow-x-hidden">
+<body>
 
-    <!-- TOAST -->
-    <div id="toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[200] bg-stone-900 text-white px-6 py-3 rounded-full shadow-2xl hidden flex items-center gap-3">
-        <span id="toast-msg" class="text-[10px] font-bold uppercase tracking-widest"></span>
+    <!-- SUCCESS TOAST -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] bg-stone-900 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-4 animate-bounce hidden">
+        <span class="text-xs font-bold uppercase tracking-widest">Added: <span id="toast-name"></span></span>
     </div>
 
-    <!-- NAVIGATION (Logo Untouched) -->
-    <nav class="fixed w-full z-50 glass-nav border-b border-stone-200/60 h-16 md:h-20">
-        <div class="max-w-7xl mx-auto px-4 md:px-6 h-full flex items-center justify-between">
-            <a href="#" class="flex items-center gap-1">
-                <span class="text-xl md:text-2xl font-extrabold tracking-tighter text-slate-800">Plate</span>
-                <div class="relative w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
+    <!-- NAVIGATION (LOGO UNTOUCHED) -->
+    <nav class="fixed w-full z-50 glass-nav border-b border-stone-200/60 h-20">
+        <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+            <a href="#" class="flex items-center gap-1 group">
+                <span class="text-2xl font-extrabold tracking-tighter text-slate-800">Plate</span>
+                <div class="relative w-8 h-8 flex items-center justify-center transition-transform group-hover:rotate-12">
                     <svg viewBox="0 0 100 100" class="w-full h-full">
                         <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-800" />
                         <circle cx="50" cy="50" r="28" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-400" stroke-dasharray="4 2" />
@@ -29,63 +29,69 @@
                     </svg>
                 </div>
             </a>
-            
-            <button onclick="toggleCart()" class="bg-stone-900 text-white px-4 py-2 md:px-6 md:py-3 rounded-full flex gap-3 items-center">
-                <span class="text-[10px] font-bold uppercase tracking-widest">Cart</span>
-                <span class="cart-count-val text-xs font-bold">0</span>
-            </button>
+            <div class="flex items-center space-x-10">
+                <nav class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-widest text-stone-500">
+                    <a href="#shop" class="hover:text-[#8B0000]">The Collection</a>
+                    <a href="#about" class="hover:text-[#8B0000]">Heritage</a>
+                </nav>
+                <button onclick="toggleCart()" class="bg-stone-900 text-white px-6 py-3 rounded-full flex gap-3 shadow-xl">
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Basket</span>
+                    <span id="cart-count-nav" class="text-xs font-bold">0</span>
+                </button>
+            </div>
         </div>
     </nav>
 
     <!-- HERO SECTION -->
-    <section class="pt-32 pb-12 px-4 md:px-6 overflow-hidden max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
+    <section class="relative pt-32 pb-20 px-6 overflow-hidden max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
         <div>
-            <div class="flex items-center gap-2 mb-4">
-                <span class="h-px w-6 bg-[#8B0000]"></span>
-                <span class="text-[#8B0000] text-[10px] font-bold uppercase tracking-widest">Handmade In Bengal</span>
+            <div class="flex items-center gap-3 mb-6">
+                <span class="h-px w-8 bg-[#8B0000]"></span>
+                <span class="text-[#8B0000] text-[10px] font-bold uppercase tracking-widest">Established 1924</span>
             </div>
-            <h1 class="hero-text text-5xl md:text-8xl font-black text-stone-900 brand-font mb-6 leading-tight">
-                Earthly <br><span class="italic text-[#8B0000] font-light">Soul.</span>
-            </h1>
-            <p class="text-stone-500 text-sm md:text-lg max-w-sm mb-8">Premium artisan clayware crafted from the fertile soil of the Ganges.</p>
-            <a href="#shop" class="inline-block px-8 py-4 bg-stone-900 text-white rounded-full font-bold text-[10px] uppercase tracking-widest shadow-xl">Shop Collection</a>
+            <h1 class="hero-title text-7xl lg:text-9xl font-black text-stone-900 leading-none mb-8 brand-font">Earthly <br><span class="italic font-light text-[#8B0000]">Elegance.</span></h1>
+            <p class="text-lg text-stone-500 max-w-sm leading-relaxed mb-10">Sustainably sourced from the Ganges, handcrafted by national award-winning artisans.</p>
+            <a href="#shop" class="px-10 py-5 bg-stone-900 text-white rounded-full font-bold text-xs uppercase tracking-widest shadow-2xl">Explore Studio</a>
         </div>
         <div class="hero-float">
-            <img src="https://i.ibb.co/v4m8YmC/clay-plate-vector.png" class="w-full h-auto max-w-[400px] mx-auto drop-shadow-2xl">
+            <img src="https://m.media-amazon.com/images/I/51ZFsr-JbyL._SX679_.jpg" class="w-full drop-shadow-2xl">
         </div>
     </section>
 
-    <!-- PRODUCT GRID -->
-    <section id="shop" class="py-20 px-4 md:px-6 bg-white">
+    <!-- SHOP SECTION -->
+    <section id="shop" class="py-20 px-6 bg-white">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-3xl md:text-5xl font-bold brand-font mb-12">Artisanal Vessels</h2>
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Data from JS -->
+            <h2 class="text-5xl font-bold text-stone-900 brand-font mb-20">The Studio Collection</h2>
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Products injected via script.js -->
             </div>
         </div>
     </section>
 
-    <!-- CART DRAWER -->
+    <!-- CART SIDEBAR -->
     <div id="cartDrawer" class="fixed inset-0 z-[100] invisible">
-        <div onclick="toggleCart()" class="absolute inset-0 bg-stone-950/40 backdrop-blur-sm"></div>
-        <div class="absolute right-0 top-0 h-full bg-white cart-drawer translate-x-full flex flex-col shadow-2xl">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="text-xl font-bold brand-font">Basket (<span class="cart-count-val">0</span>)</h2>
+        <div onclick="toggleCart()" class="absolute inset-0 bg-stone-950/60 backdrop-blur-md"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white cart-drawer translate-x-full flex flex-col">
+            <div class="p-8 border-b flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold brand-font">Your Basket</h2>
+                    <p id="cart-count-drawer" class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-1">0 Items Selected</p>
+                </div>
                 <button onclick="toggleCart()" class="text-2xl">✕</button>
             </div>
-            <div id="cart-items-list" class="flex-1 overflow-y-auto p-6 space-y-6"></div>
-            <div class="p-6 bg-stone-50 border-t">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-stone-400 font-bold text-xs uppercase tracking-widest">Subtotal</span>
-                    <span id="cart-subtotal" class="text-2xl font-black brand-font">₹0</span>
+            <div id="cart-items-list" class="flex-1 overflow-y-auto p-8 space-y-10"></div>
+            <div id="cart-footer" class="p-8 bg-stone-50 border-t space-y-6 hidden">
+                <div class="flex justify-between items-end">
+                    <span id="cart-total-amount" class="text-4xl font-black text-stone-900 brand-font">₹0</span>
+                    <span class="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Incl. all taxes</span>
                 </div>
-                <button class="w-full py-4 bg-stone-900 text-white rounded-2xl font-bold uppercase tracking-widest text-[10px]">Checkout</button>
+                <button class="w-full py-6 bg-stone-900 text-white rounded-full font-bold uppercase tracking-widest text-[10px]">Secure Checkout</button>
             </div>
         </div>
     </div>
 
-    <footer class="py-12 bg-stone-50 text-center border-t border-stone-100">
-        <p class="text-[10px] text-stone-400 font-bold uppercase tracking-[0.3em]">© 2026 PlateO Bengal Edition</p>
+    <footer class="bg-stone-950 py-12 px-6 text-center text-stone-600 text-[10px] uppercase tracking-[0.4em]">
+        © 2026 PlateO Bengal Edition.
     </footer>
 
 </body>
