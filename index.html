@@ -1,26 +1,21 @@
-<?php include('products.php'); ?>
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $brand_name; ?> | Artisan Bengali Earthenware</title>
-    
-    <!-- Scripts & Styles Interlinks -->
+    <title>PlateO | Artisan Bengali Earthenware</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=Plus+Jakarta+Sans:wght@300;400;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 <body class="overflow-x-hidden">
 
     <!-- SUCCESS TOAST -->
-    <?php if(isset($_SESSION['last_added'])): ?>
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] bg-stone-900 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-4 animate-bounce">
-        <span class="text-xs font-bold uppercase tracking-widest">Added: <?php echo $_SESSION['last_added']; ?></span>
-        <button onclick="this.parentElement.remove()" class="text-stone-400 hover:text-white">✕</button>
+    <div id="toast" style="display:none" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[110] bg-stone-900 text-white px-8 py-4 rounded-full shadow-2xl items-center gap-4 animate-bounce">
+        <span id="toast-name" class="text-xs font-bold uppercase tracking-widest"></span>
+        <button onclick="this.parentElement.style.display='none'" class="text-stone-400 hover:text-white">✕</button>
     </div>
-    <?php unset($_SESSION['last_added']); endif; ?>
 
     <!-- NAVIGATION (LOGO UNTOUCHED) -->
     <nav class="fixed w-full z-50 glass-nav border-b border-stone-200/60">
@@ -35,7 +30,6 @@
                     </svg>
                 </div>
             </a>
-
             <div class="flex items-center space-x-10">
                 <nav class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-stone-500">
                     <a href="#shop" class="hover:text-[#8B0000] transition-colors">The Collection</a>
@@ -44,7 +38,7 @@
                 <button onclick="toggleCart()" class="relative group flex items-center gap-3 bg-stone-900 text-white px-6 py-3 rounded-full hover:bg-[#8B0000] transition-all duration-300 shadow-xl shadow-stone-200">
                     <span class="text-[10px] font-bold uppercase tracking-widest">Basket</span>
                     <div class="w-px h-3 bg-stone-700"></div>
-                    <span class="text-xs font-bold"><?php echo $cart_count; ?></span>
+                    <span id="cart-count-badge" class="text-xs font-bold">0</span>
                 </button>
             </div>
         </div>
@@ -58,21 +52,14 @@
                     <span class="h-px w-8 bg-[#8B0000]"></span>
                     <span class="text-[#8B0000] text-[10px] font-bold uppercase tracking-[0.3em]">Established 1924 • West Bengal</span>
                 </div>
-                <h1 class="text-7xl lg:text-9xl font-black text-stone-900 leading-[0.85] mb-8 brand-font">
-                    Earthly <br><span class="italic font-light text-[#8B0000]">Elegance.</span>
-                </h1>
-                <p class="text-lg text-stone-500 max-w-sm leading-relaxed mb-10">
-                    Sustainably sourced from the Ganges, handcrafted by national award-winning artisans.
-                </p>
+                <h1 class="text-7xl lg:text-9xl font-black text-stone-900 leading-[0.85] mb-8 brand-font">Earthly <br><span class="italic font-light text-[#8B0000]">Elegance.</span></h1>
+                <p class="text-lg text-stone-500 max-w-sm leading-relaxed mb-10">Sustainably sourced from the Ganges, handcrafted by artisans.</p>
                 <div class="flex flex-wrap gap-4">
                     <a href="#shop" class="px-10 py-5 bg-stone-900 text-white rounded-full font-bold text-xs uppercase tracking-widest shadow-2xl hover:bg-[#8B0000] transition-all transform hover:-translate-y-1">Explore Studio</a>
                 </div>
             </div>
-            <div class="relative">
-                <div class="absolute inset-0 bg-[#A0522D]/5 rounded-full blur-3xl transform scale-110"></div>
-                <div class="relative hero-float">
-                    <img src="https://m.media-amazon.com/images/I/51ZFsr-JbyL._SX679_.jpg" class="w-full h-auto object-contain drop-shadow-[0_50px_50px_rgba(0,0,0,0.15)]" alt="Hero Clayware">
-                </div>
+            <div class="hero-float">
+                <img src="https://m.media-amazon.com/images/I/51ZFsr-JbyL._SX679_.jpg" class="w-full h-auto drop-shadow-2xl">
             </div>
         </div>
     </section>
@@ -81,32 +68,15 @@
     <section id="shop" class="py-32 bg-white">
         <div class="max-w-7xl mx-auto px-6">
             <h2 class="text-5xl font-bold text-stone-900 brand-font mb-20">The Studio Collection</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <?php foreach($products as $id => $product): ?>
-                <div class="product-card group bg-stone-50/50 rounded-[2.5rem] p-4 hover:bg-white hover:shadow-2xl hover:shadow-stone-200/50">
-                    <div class="relative aspect-square rounded-[2rem] overflow-hidden bg-[#f3f0ec] mb-6">
-                        <img src="<?php echo $product['img']; ?>" class="w-full h-full object-contain p-8 img-zoom" alt="<?php echo $product['name']; ?>">
-                    </div>
-                    <div class="px-2 pb-4">
-                        <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#8B0000] mb-1"><?php echo $product['type']; ?></p>
-                        <h3 class="text-xl font-bold text-stone-800 brand-font leading-tight mb-4"><?php echo $product['name']; ?></h3>
-                        <form method="POST">
-                            <input type="hidden" name="product_id" value="<?php echo $id; ?>">
-                            <input type="hidden" name="action" value="add">
-                            <button type="submit" class="w-full py-4 rounded-2xl bg-white border border-stone-200 shadow-sm font-bold text-[10px] uppercase tracking-widest group-hover:bg-stone-900 group-hover:text-white group-hover:border-stone-900 transition-all duration-300">
-                                Add to Basket • ₹<?php echo number_format($product['price']); ?>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Products render via JS -->
             </div>
         </div>
     </section>
 
     <!-- FOOTER (LOGO UNTOUCHED) -->
-    <footer class="bg-stone-950 py-24 px-6 text-stone-500 overflow-hidden relative">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16 relative z-10">
+    <footer class="bg-stone-950 py-24 px-6 text-stone-500 relative">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16">
             <div class="max-w-sm">
                 <a href="#" class="flex items-center gap-1 mb-8">
                     <span class="text-2xl font-extrabold tracking-tighter text-white">Plate</span>
@@ -115,7 +85,7 @@
                         <circle cx="50" cy="50" r="15" fill="#8B0000" />
                     </svg>
                 </a>
-                <p class="text-sm leading-relaxed mb-10 text-stone-400">© 2026 PlateO Bengal Edition.</p>
+                <p class="text-sm text-stone-400">© 2026 PlateO Bengal Edition.</p>
             </div>
         </div>
     </footer>
@@ -123,36 +93,23 @@
     <!-- CART SIDEBAR -->
     <div id="cartDrawer" class="fixed inset-0 z-[100] invisible">
         <div onclick="toggleCart()" class="absolute inset-0 bg-stone-950/60 backdrop-blur-md transition-opacity duration-500"></div>
-        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white cart-drawer translate-x-full flex flex-col shadow-[-20px_0_50px_rgba(0,0,0,0.1)]">
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white cart-drawer translate-x-full flex flex-col">
             <div class="p-8 border-b flex justify-between items-center">
-                <h2 class="text-2xl font-bold brand-font">Your Basket</h2>
-                <button onclick="toggleCart()" class="text-stone-400">✕</button>
-            </div>
-            <div class="flex-1 overflow-y-auto p-8 space-y-10">
-                <?php 
-                $subtotal = 0;
-                foreach($_SESSION['cart'] as $id => $qty): 
-                    $item = $products[$id];
-                    $subtotal += ($item['price'] * $qty);
-                ?>
-                <div class="flex gap-6 items-start">
-                    <img src="<?php echo $item['img']; ?>" class="w-20 h-20 object-contain bg-stone-50 rounded-2xl p-2">
-                    <div class="flex-1">
-                        <h4 class="font-bold text-stone-800 brand-font"><?php echo $item['name']; ?></h4>
-                        <p class="text-[10px] text-stone-400">Qty: <?php echo $qty; ?></p>
-                        <a href="?remove=<?php echo $id; ?>" class="text-[9px] uppercase font-bold text-red-800">Remove</a>
-                    </div>
+                <div>
+                    <h2 class="text-2xl font-bold brand-font">Your Basket</h2>
+                    <p id="cart-count-drawer" class="text-[10px] font-bold text-stone-400 uppercase tracking-widest mt-1">0 Items Selected</p>
                 </div>
-                <?php endforeach; ?>
+                <button onclick="toggleCart()">✕</button>
             </div>
-            <?php if(!empty($_SESSION['cart'])): ?>
-            <div class="p-8 bg-stone-50 border-t">
-                <div class="flex justify-between items-end mb-6">
-                    <span class="text-4xl font-black text-stone-900 brand-font">₹<?php echo number_format($subtotal); ?></span>
+            <div id="cart-items-list" class="flex-1 overflow-y-auto p-8 space-y-10">
+                <!-- Cart items render via JS -->
+            </div>
+            <div id="cart-footer" class="p-8 bg-stone-50 border-t space-y-6">
+                <div class="flex justify-between items-end">
+                    <span class="text-4xl font-black text-stone-900 brand-font" id="cart-subtotal">₹0</span>
                 </div>
                 <button class="w-full py-6 bg-stone-900 text-white rounded-full font-bold uppercase tracking-widest text-[10px]">Secure Checkout</button>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 </body>
