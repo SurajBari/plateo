@@ -1,27 +1,34 @@
 let storeData = { products: {}, cart: {}, cart_count: 0 };
 
-async function refreshStore() {
-    try {
-        const response = await fetch('api.php?action=get_data');
-        storeData = await response.json();
-        renderProducts();
-        renderCart();
-    } catch (e) { console.error("Data fetch failed"); }
+async function loadStore() {
+    const response = await fetch('api.php?action=get_data');
+    storeData = await response.json();
+    renderProducts();
+    renderCart();
 }
 
 function renderProducts() {
-    const container = document.getElementById('product-grid');
-    container.innerHTML = Object.entries(storeData.products).map(([id, p]) => `
-        <div class="product-card bg-white border border-stone-100 rounded-[2rem] p-5 shadow-sm hover:shadow-xl">
-            <div class="aspect-square bg-stone-50 rounded-[1.5rem] mb-6 flex items-center justify-center p-6 overflow-hidden">
-                <img src="${p.img}" class="w-full h-full object-contain hover:scale-110 transition-transform duration-500" alt="${p.name}">
+    const grid = document.getElementById('product-grid');
+    grid.innerHTML = Object.entries(storeData.products).map(([id, p]) => `
+        <div class="product-card group bg-stone-50/50 rounded-[2.5rem] p-4 hover:bg-white hover:shadow-2xl">
+            <div class="relative aspect-square rounded-[2rem] overflow-hidden bg-[#f3f0ec] mb-6">
+                <img src="${p.img}" class="w-full h-full object-contain p-8 img-zoom" alt="${p.name}">
+                <div class="absolute top-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
+                     <span class="bg-white/90 backdrop-blur-md text-[9px] font-bold px-3 py-1.5 rounded-full shadow-sm uppercase tracking-tighter">Handmade</span>
+                </div>
             </div>
-            <p class="text-[10px] font-bold text-[#8B0000] uppercase tracking-widest mb-1">${p.type}</p>
-            <h3 class="text-lg font-bold brand-font mb-2">${p.name}</h3>
-            <p class="text-xs text-stone-500 line-clamp-2 mb-4">${p.desc}</p>
-            <div class="flex justify-between items-center">
-                <span class="font-bold text-lg">₹${p.price}</span>
-                <button onclick="addToCart('${id}')" class="bg-stone-900 text-white px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest active:scale-95 transition-all">Add +</button>
+            <div class="px-2 pb-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#8B0000] mb-1">${p.type}</p>
+                        <h3 class="text-xl font-bold text-stone-800 brand-font leading-tight">${p.name}</h3>
+                    </div>
+                    <span class="font-bold text-stone-900">₹${p.price}</span>
+                </div>
+                <p class="text-xs text-stone-500 line-clamp-2 mb-6 leading-relaxed">${p.desc}</p>
+                <button onclick="addToCart('${id}')" class="w-full py-4 rounded-2xl bg-white border border-stone-200 shadow-sm font-bold text-[10px] uppercase tracking-widest group-hover:bg-stone-900 group-hover:text-white transition-all duration-300">
+                    Add to Basket
+                </button>
             </div>
         </div>
     `).join('');
@@ -34,7 +41,7 @@ async function addToCart(id) {
     const res = await response.json();
     if (res.success) {
         showToast(res.name);
-        refreshStore();
+        loadStore();
     }
 }
 
@@ -42,48 +49,58 @@ async function removeFromCart(id) {
     const body = new FormData();
     body.append('product_id', id);
     await fetch('api.php?action=remove', { method: 'POST', body });
-    refreshStore();
+    loadStore();
 }
 
 function renderCart() {
+    document.getElementById('cart-count-nav').innerText = storeData.cart_count;
+    document.getElementById('cart-count-drawer').innerText = `${storeData.cart_count} Items Selected`;
     const list = document.getElementById('cart-items-list');
-    document.querySelectorAll('.cart-count-val').forEach(el => el.innerText = storeData.cart_count);
-
+    
     let subtotal = 0;
-    let html = '';
-
     if (Object.keys(storeData.cart).length === 0) {
-        html = `<div class="text-center py-20 text-stone-400 italic">Your basket is empty.</div>`;
+        list.innerHTML = `<div class="text-center py-20 text-stone-400 italic">Your basket is empty.</div>`;
+        document.getElementById('cart-footer').classList.add('hidden');
     } else {
-        Object.entries(storeData.cart).forEach(([id, qty]) => {
+        list.innerHTML = Object.entries(storeData.cart).map(([id, qty]) => {
             const p = storeData.products[id];
             subtotal += (p.price * qty);
-            html += `
-                <div class="flex gap-4 items-center border-b border-stone-100 pb-4">
-                    <img src="${p.img}" class="w-16 h-16 object-contain bg-stone-50 rounded-xl">
+            return `
+                <div class="flex gap-6 items-start">
+                    <img src="${p.img}" class="w-24 h-24 bg-stone-50 rounded-2xl object-contain p-3">
                     <div class="flex-1">
-                        <h4 class="font-bold text-sm">${p.name}</h4>
-                        <p class="text-[10px] text-stone-500">Qty: ${qty} • ₹${p.price * qty}</p>
+                        <div class="flex justify-between">
+                            <h4 class="font-bold text-stone-800 brand-font text-lg">${p.name}</h4>
+                            <button onclick="removeFromCart('${id}')" class="text-stone-300 hover:text-red-800">✕</button>
+                        </div>
+                        <p class="text-[10px] text-stone-400 uppercase font-bold">Qty: ${qty}</p>
+                        <div class="font-bold text-stone-900 text-sm mt-4 italic">₹${p.price * qty}</div>
                     </div>
-                    <button onclick="removeFromCart('${id}')" class="text-stone-300 hover:text-red-500">✕</button>
                 </div>`;
-        });
+        }).join('');
+        document.getElementById('cart-footer').classList.remove('hidden');
+        document.getElementById('cart-total-amount').innerText = `₹${subtotal.toLocaleString()}`;
     }
-    list.innerHTML = html;
-    document.getElementById('cart-subtotal').innerText = "₹" + subtotal;
 }
 
 function toggleCart() {
     const drawer = document.getElementById('cartDrawer');
-    drawer.classList.toggle('invisible');
-    drawer.querySelector('.cart-drawer').classList.toggle('translate-x-full');
+    const inner = drawer.querySelector('.cart-drawer');
+    if (drawer.classList.contains('invisible')) {
+        drawer.classList.remove('invisible');
+        setTimeout(() => inner.classList.remove('translate-x-full'), 10);
+        document.body.style.overflow = 'hidden';
+    } else {
+        inner.classList.add('translate-x-full');
+        setTimeout(() => { drawer.classList.add('invisible'); document.body.style.overflow = 'auto'; }, 500);
+    }
 }
 
 function showToast(name) {
     const toast = document.getElementById('toast');
-    document.getElementById('toast-msg').innerText = "Added: " + name;
+    toast.querySelector('#toast-name').innerText = name;
     toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 3000);
+    setTimeout(() => toast.classList.add('hidden'), 4000);
 }
 
-window.onload = refreshStore;
+window.onload = loadStore;
