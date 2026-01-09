@@ -3,14 +3,15 @@ let cart = JSON.parse(localStorage.getItem('plateo_cart')) || {};
 
 async function loadStore() {
     try {
-        // Fetch products from api.php
-        const response = await fetch('api.php');
+        // Updated to fetch from fetch.php
+        const response = await fetch('fetch.php');
+        if (!response.ok) throw new Error("Could not load products");
         products = await response.json();
         
         renderProducts();
         renderCart();
     } catch (error) {
-        console.error("Vercel API Error:", error);
+        console.error("Fetch Error:", error);
     }
 }
 
@@ -19,7 +20,7 @@ function renderProducts() {
     if (!grid) return;
 
     grid.innerHTML = Object.entries(products).map(([id, p]) => `
-        <div class="product-card group bg-stone-50/50 rounded-[2.5rem] p-4 hover:bg-white hover:shadow-2xl">
+        <div class="product-card group bg-stone-50/50 rounded-[2.5rem] p-4 hover:bg-white hover:shadow-2xl transition-all duration-300">
             <div class="relative aspect-square rounded-[2rem] overflow-hidden bg-[#f3f0ec] mb-6">
                 <img src="${p.img}" class="w-full h-full object-contain p-8 img-zoom" alt="${p.name}">
                 <div class="absolute top-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
@@ -60,14 +61,14 @@ function saveCart() {
 }
 
 function renderCart() {
-    const count = Object.values(cart).reduce((a, b) => a + b, 0);
-    document.getElementById('cart-count-nav').innerText = count;
-    document.getElementById('cart-count-drawer').innerText = `${count} Items Selected`;
+    const totalQty = Object.values(cart).reduce((a, b) => a + b, 0);
+    document.getElementById('cart-count-nav').innerText = totalQty;
+    document.getElementById('cart-count-drawer').innerText = `${totalQty} Items Selected`;
 
     const list = document.getElementById('cart-items-list');
     let subtotal = 0;
 
-    if (count === 0) {
+    if (totalQty === 0) {
         list.innerHTML = `<div class="text-center py-20 text-stone-400 italic">Your basket is empty.</div>`;
         document.getElementById('cart-footer').classList.add('hidden');
     } else {
@@ -76,14 +77,14 @@ function renderCart() {
             subtotal += (p.price * qty);
             return `
                 <div class="flex gap-6 items-start">
-                    <img src="${p.img}" class="w-24 h-24 bg-stone-50 rounded-2xl object-contain p-3">
+                    <img src="${p.img}" class="w-20 md:w-24 h-20 md:h-24 bg-stone-50 rounded-2xl object-contain p-3">
                     <div class="flex-1">
                         <div class="flex justify-between">
-                            <h4 class="font-bold text-stone-800 brand-font text-lg">${p.name}</h4>
+                            <h4 class="font-bold text-stone-800 brand-font text-base md:text-lg">${p.name}</h4>
                             <button onclick="removeFromCart('${id}')" class="text-stone-300 hover:text-red-800">✕</button>
                         </div>
-                        <p class="text-[10px] text-stone-400 uppercase font-bold">Qty: ${qty}</p>
-                        <div class="font-bold text-stone-900 text-sm mt-4 italic">₹${p.price * qty}</div>
+                        <p class="text-[10px] text-stone-400 uppercase font-bold mt-1">Qty: ${qty}</p>
+                        <div class="font-bold text-stone-900 text-sm mt-3 italic">₹${(p.price * qty).toLocaleString()}</div>
                     </div>
                 </div>`;
         }).join('');
