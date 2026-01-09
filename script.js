@@ -1,16 +1,16 @@
-let storeData = { products: {}, cart: {}, cart_count: 0 };
+let products = {};
+let cart = JSON.parse(localStorage.getItem('plateo_cart')) || {};
 
 async function loadStore() {
     try {
-        const response = await fetch('api.php?action=get_data');
-        if (!response.ok) throw new Error("API Path not found or Server Error");
+        // Fetch products from api.php
+        const response = await fetch('api.php');
+        products = await response.json();
         
-        storeData = await response.json();
         renderProducts();
         renderCart();
     } catch (error) {
-        console.error("Failed to load products:", error);
-        alert("Check Console: Make sure api.php exists in the same folder and you are using a local server (XAMPP).");
+        console.error("Vercel API Error:", error);
     }
 }
 
@@ -18,12 +18,7 @@ function renderProducts() {
     const grid = document.getElementById('product-grid');
     if (!grid) return;
 
-    if (!storeData.products || Object.keys(storeData.products).length === 0) {
-        grid.innerHTML = "<p class='col-span-full text-center py-10'>No products found in api.php</p>";
-        return;
-    }
-
-    grid.innerHTML = Object.entries(storeData.products).map(([id, p]) => `
+    grid.innerHTML = Object.entries(products).map(([id, p]) => `
         <div class="product-card group bg-stone-50/50 rounded-[2.5rem] p-4 hover:bg-white hover:shadow-2xl">
             <div class="relative aspect-square rounded-[2rem] overflow-hidden bg-[#f3f0ec] mb-6">
                 <img src="${p.img}" class="w-full h-full object-contain p-8 img-zoom" alt="${p.name}">
@@ -48,44 +43,36 @@ function renderProducts() {
     `).join('');
 }
 
-async function addToCart(id) {
-    const body = new FormData();
-    body.append('product_id', id);
-    try {
-        const response = await fetch('api.php?action=add', { method: 'POST', body });
-        const res = await response.json();
-        if (res.success) {
-            showToast(res.name);
-            loadStore();
-        }
-    } catch (e) { console.error("Error adding to cart:", e); }
+function addToCart(id) {
+    cart[id] = (cart[id] || 0) + 1;
+    saveCart();
+    showToast(products[id].name);
 }
 
-async function removeFromCart(id) {
-    const body = new FormData();
-    body.append('product_id', id);
-    await fetch('api.php?action=remove', { method: 'POST', body });
-    loadStore();
+function removeFromCart(id) {
+    delete cart[id];
+    saveCart();
+}
+
+function saveCart() {
+    localStorage.setItem('plateo_cart', JSON.stringify(cart));
+    renderCart();
 }
 
 function renderCart() {
-    // Update Counts
-    const navCount = document.getElementById('cart-count-nav');
-    const drawerCount = document.getElementById('cart-count-drawer');
-    if (navCount) navCount.innerText = storeData.cart_count;
-    if (drawerCount) drawerCount.innerText = `${storeData.cart_count} Items Selected`;
+    const count = Object.values(cart).reduce((a, b) => a + b, 0);
+    document.getElementById('cart-count-nav').innerText = count;
+    document.getElementById('cart-count-drawer').innerText = `${count} Items Selected`;
 
     const list = document.getElementById('cart-items-list');
-    if (!list) return;
-
     let subtotal = 0;
-    if (!storeData.cart || Object.keys(storeData.cart).length === 0) {
+
+    if (count === 0) {
         list.innerHTML = `<div class="text-center py-20 text-stone-400 italic">Your basket is empty.</div>`;
-        document.getElementById('cart-footer')?.classList.add('hidden');
+        document.getElementById('cart-footer').classList.add('hidden');
     } else {
-        list.innerHTML = Object.entries(storeData.cart).map(([id, qty]) => {
-            const p = storeData.products[id];
-            if (!p) return '';
+        list.innerHTML = Object.entries(cart).map(([id, qty]) => {
+            const p = products[id];
             subtotal += (p.price * qty);
             return `
                 <div class="flex gap-6 items-start">
@@ -100,15 +87,13 @@ function renderCart() {
                     </div>
                 </div>`;
         }).join('');
-        document.getElementById('cart-footer')?.classList.remove('hidden');
-        const totalEl = document.getElementById('cart-total-amount');
-        if (totalEl) totalEl.innerText = `₹${subtotal.toLocaleString()}`;
+        document.getElementById('cart-footer').classList.remove('hidden');
+        document.getElementById('cart-total-amount').innerText = `₹${subtotal.toLocaleString()}`;
     }
 }
 
 function toggleCart() {
     const drawer = document.getElementById('cartDrawer');
-    if (!drawer) return;
     const inner = drawer.querySelector('.cart-drawer');
     if (drawer.classList.contains('invisible')) {
         drawer.classList.remove('invisible');
@@ -122,12 +107,9 @@ function toggleCart() {
 
 function showToast(name) {
     const toast = document.getElementById('toast');
-    if (!toast) return;
-    const nameSpan = toast.querySelector('#toast-name');
-    if (nameSpan) nameSpan.innerText = name;
+    toast.querySelector('#toast-name').innerText = name;
     toast.classList.remove('hidden');
-    setTimeout(() => toast.classList.add('hidden'), 4000);
+    setTimeout(() => toast.classList.add('hidden'), 3000);
 }
 
-// Initial Load
 window.onload = loadStore;
