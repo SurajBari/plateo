@@ -1,5 +1,8 @@
 <?php
+// Prevent any PHP warnings from breaking the JSON output
+error_reporting(0);
 session_start();
+
 header('Content-Type: application/json');
 
 $products = [
@@ -37,24 +40,29 @@ if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
 
 $action = $_GET['action'] ?? 'get_data';
 
+// Add to Cart
 if ($action === 'add' && isset($_POST['product_id'])) {
     $id = $_POST['product_id'];
     if (isset($products[$id])) {
         $_SESSION['cart'][$id] = ($_SESSION['cart'][$id] ?? 0) + 1;
         echo json_encode(['success' => true, 'name' => $products[$id]['name']]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Product not found']);
     }
     exit;
 }
 
+// Remove from Cart
 if ($action === 'remove' && isset($_POST['product_id'])) {
     unset($_SESSION['cart'][$_POST['product_id']]);
     echo json_encode(['success' => true]);
     exit;
 }
 
-// Return store data
+// Default: Return all store data
 echo json_encode([
     'products' => $products,
     'cart' => $_SESSION['cart'],
     'cart_count' => array_sum($_SESSION['cart'])
 ]);
+exit;
