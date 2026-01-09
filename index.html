@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <title>PlateO | Artisan Bengali Earthenware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- NAVIGATION (Logo Untouched) -->
+    <nav class="fixed w-full z-50 glass-nav border-b border-stone-200/60">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-1">
+                <span class="text-2xl font-extrabold tracking-tighter text-slate-800">Plate</span>
+                <div class="relative w-8 h-8 flex items-center justify-center">
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-800" />
+                        <circle cx="50" cy="50" r="6" class="fill-[#8B0000]" />
+                    </svg>
+                </div>
+            </a>
+            <button onclick="toggleCart()" class="bg-stone-900 text-white px-6 py-3 rounded-full flex gap-3 items-center">
+                <span class="text-[10px] font-bold uppercase tracking-widest">Basket</span>
+                <span id="cart-count" class="text-xs font-bold">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="pt-40 pb-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 items-center gap-16">
+        <div>
+            <h1 class="text-7xl font-black text-stone-900 leading-none mb-8 brand-font">Earthly <br><span class="italic text-[#8B0000] font-light">Elegance.</span></h1>
+            <p class="text-stone-500 max-w-sm mb-10">Handcrafted by national award-winning artisans of West Bengal.</p>
+            <a href="#shop" class="px-10 py-5 bg-stone-900 text-white rounded-full font-bold text-xs uppercase tracking-widest shadow-2xl">Explore Studio</a>
+        </div>
+        <div class="hero-float">
+            <img src="https://m.media-amazon.com/images/I/51ZFsr-JbyL._SX679_.jpg" class="w-full drop-shadow-2xl">
+        </div>
+    </section>
+
+    <!-- SHOP -->
+    <section id="shop" class="py-32 bg-white px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-5xl font-bold brand-font mb-16">The Studio Collection</h2>
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Products loaded via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CART DRAWER -->
+    <div id="cartDrawer" class="fixed inset-0 z-[100] invisible">
+        <div onclick="toggleCart()" class="absolute inset-0 bg-stone-950/60 backdrop-blur-md"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white cart-drawer translate-x-full flex flex-col p-8">
+            <h2 class="text-3xl font-bold brand-font mb-8">Your Basket</h2>
+            <div id="cart-items" class="flex-1 space-y-6 overflow-y-auto"></div>
+            <div class="mt-8 pt-8 border-t">
+                <div class="flex justify-between text-2xl font-bold mb-6">
+                    <span>Total</span>
+                    <span id="cart-total">₹0</span>
+                </div>
+                <button class="w-full py-5 bg-stone-900 text-white rounded-full font-bold uppercase tracking-widest text-[10px]">Secure Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-stone-900 text-white px-8 py-4 rounded-full hidden z-[200]">
+        <span class="text-xs font-bold uppercase tracking-widest"></span>
+    </div>
+
+    <footer class="bg-stone-950 py-12 text-center text-stone-600 text-[10px] uppercase tracking-widest">
+        © 2026 PlateO Bengal Edition.
+    </footer>
+</body>
+</html>
