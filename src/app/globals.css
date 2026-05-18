@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f1ec;
+  --paper: #fdfbf8;
+  --foreground: #2a1d16;
+  --muted: #74635b;
+  --terracotta: #b54f2e;
+  --terracotta-dark: #8e351c;
+  --ink: #1b1715;
+  --footer: #12100f;
+  --line: #e5ddd2;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-paper: var(--paper);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-dark: var(--terracotta-dark);
+  --color-ink: var(--ink);
+  --color-footer: var(--footer);
+  --color-line: var(--line);
+  --font-sans: var(--font-body);
+}
+
+body {
+  background-color: var(--background);
+  background-image:
+    linear-gradient(rgba(248, 243, 236, 0.87), rgba(244, 238, 230, 0.9)),
+    url("https://i.pinimg.com/1200x/52/8d/29/528d29d28a24bdf0678fe704c33090de.jpg"),
+    url("https://i.pinimg.com/736x/b6/31/91/b63191032b463a67ff51ac52de5005fb.jpg"),
+    url("https://i.pinimg.com/1200x/ef/21/1d/ef211d0bdc836affe149bbba4307bdea.jpg");
+  background-size: 100% 100%, 420px 420px, 380px 380px, 560px 560px;
+  background-position: center, 0 0, 40% 30%, 80% 70%;
+  background-blend-mode: normal, soft-light, overlay, multiply;
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading), serif;
+}
+
+.terracotta-grain {
+  background-image:
+    radial-gradient(circle at 20% 65%, rgba(155, 70, 42, 0.08) 0, transparent 34%),
+    radial-gradient(circle at 14% 20%, rgba(181, 79, 46, 0.07) 0, transparent 38%),
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.4) 0, transparent 26%),
+    radial-gradient(circle at 78% 54%, rgba(66, 39, 27, 0.05) 0, transparent 26%),
+    linear-gradient(180deg, #f8f4ef 0%, #f3eee8 100%);
+}
+
+.paper-card {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgba(253, 251, 248, 0.94), rgba(253, 251, 248, 0.9)),
+    url("https://i.pinimg.com/1200x/ae/ac/ed/aeacedef8573cefbd2cc301ae8a650a9.jpg"),
+    url("https://i.pinimg.com/736x/4e/3c/e2/4e3ce2c9916365b93ab68f279330cf2b.jpg");
+  background-size: 100% 100%, 380px 380px, 340px 340px;
+  background-position: center, 20% 20%, 80% 80%;
+  background-blend-mode: normal, soft-light, multiply;
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 40px rgba(42, 29, 22, 0.08);
+}
+
+.paper-noise {
+  background-image:
+    linear-gradient(rgba(248, 245, 240, 0.82), rgba(242, 237, 231, 0.88)),
+    url("https://i.pinimg.com/1200x/0a/43/58/0a4358c622ca2c0f737d247773b67243.jpg"),
+    url("https://i.pinimg.com/1200x/ee/7c/52/ee7c52f031f7cb7545afc41fcaded03a.jpg");
+  background-size: 100% 100%, 420px 420px, 500px 500px;
+  background-position: center, 0 0, 100% 100%;
+  background-blend-mode: normal, overlay, multiply;
+}
+
+.hero-mosaic {
+  background-image:
+    linear-gradient(rgba(247, 243, 237, 0.88), rgba(243, 239, 233, 0.88)),
+    url("https://i.pinimg.com/1200x/ef/21/1d/ef211d0bdc836affe149bbba4307bdea.jpg"),
+    url("https://i.pinimg.com/1200x/ee/7c/52/ee7c52f031f7cb7545afc41fcaded03a.jpg");
+  background-size: 100% 100%, 280px 280px, 360px 360px;
+  background-position: center, 0 0, 120px 80px;
+  background-repeat: no-repeat, repeat, repeat;
+  background-blend-mode: normal, multiply, soft-light;
+}
+
+.dark-grain {
+  background-image:
+    linear-gradient(rgba(30, 26, 23, 0.85), rgba(18, 16, 14, 0.9)),
+    url("https://i.pinimg.com/1200x/f7/7e/53/f77e5307c5724c120a9224a9763c3331.jpg"),
+    url("https://i.pinimg.com/736x/95/e3/3c/95e33cda252401629e56c042daba7484.jpg");
+  background-size: 100% 100%, 320px 320px, 280px 280px;
+  background-position: center, 20% 20%, 80% 70%;
+  background-blend-mode: normal, soft-light, multiply;
+}
+
+.red-grain-text {
+  color: #a91f14;
+  text-shadow: 1px 1px 0 rgba(185, 47, 30, 0.18), -1px -1px 0 rgba(130, 20, 10, 0.18);
+  background-image:
+    url("https://i.pinimg.com/736x/f1/72/c0/f172c091d208d29a4c5567c07f2f3f2e.jpg"),
+    url("https://i.pinimg.com/736x/9b/16/f2/9b16f28cf3be77c9e5e8e19cd800239f.jpg");
+  background-size: cover, 320px 320px;
+  background-position: center, 40% 60%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
